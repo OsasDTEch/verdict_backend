@@ -11,3 +11,5 @@ pydantic_ai
 psycopg2-binary
 PyJWT
 urllib3
+pydantic-ai-slim[duckduckgo]
+
