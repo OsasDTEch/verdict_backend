@@ -1,4 +1,4 @@
-fastap
+fastapI
 uvicorn[standard]
 sqlalchemy
 python-dotenv
