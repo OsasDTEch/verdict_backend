@@ -13,3 +13,5 @@ PyJWT
 urllib3
 pydantic-ai-slim[duckduckgo]
 
+neo4j
+qdrant-client
