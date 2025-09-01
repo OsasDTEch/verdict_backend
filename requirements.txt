@@ -9,6 +9,7 @@ langchain
 langgraph
 pydantic_ai
 psycopg2-binary
+pydantic[email]
 PyJWT
 langchain_google_genai
 urllib3
