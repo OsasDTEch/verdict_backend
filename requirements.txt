@@ -1,0 +1,13 @@
+fastap
+uvicorn[standard]
+sqlalchemy
+python-dotenv
+passlib[bcrypt]
+python-jose
+pydantic
+langchain
+langgraph
+pydantic_ai
+psycopg2-binary
+PyJWT
+urllib3
