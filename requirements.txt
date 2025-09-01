@@ -10,6 +10,7 @@ langgraph
 pydantic_ai
 psycopg2-binary
 PyJWT
+langchain_google_genai
 urllib3
 pydantic-ai-slim[duckduckgo]
 
