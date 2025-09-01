@@ -13,6 +13,6 @@ PyJWT
 langchain_google_genai
 urllib3
 pydantic-ai-slim[duckduckgo]
-
+langchain_community
 neo4j
 qdrant-client
