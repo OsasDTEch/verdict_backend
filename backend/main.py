@@ -114,6 +114,7 @@ async def get_message_by_userid(id:int, db:Session=Depends(get_db)):
 
 manager = ConnectionManager()
 
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Depends(get_db)):
     from auth.dependencies import get_current_user
@@ -131,8 +132,19 @@ async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Dep
         while True:
             data = await websocket.receive_text()
             # call Verdict AI for response
-            ai_response = await run_verdict_graph_async(data, db, user_id)
-            # send response back to same user
-            await manager.send_personal_message(ai_response, user_id)
+            ai_response_text = await run_verdict_graph_async(data, db, user_id)
+
+            # Create proper message object that matches your DB structure
+            ai_message = {
+                "message": ai_response_text,
+                "role": "assistant",
+                "created_at": datetime.now().isoformat(),
+                "user_id": user_id
+            }
+
+            # Send JSON object back to frontend
+            import json
+            await manager.send_personal_message(json.dumps(ai_message), user_id)
+
     except WebSocketDisconnect:
         manager.disconnect(user_id)
