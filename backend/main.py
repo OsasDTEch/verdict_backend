@@ -1,10 +1,10 @@
 import sys, os
-
+from fastapi import WebSocket, WebSocketDisconnect
 from fastapi.params import Depends
 from typing import List,Optional
 from backend.verdict_graph import run_verdict_graph_async
 
-
+from backend.utils.websocketconn import ConnectionManager
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from dotenv import load_dotenv
 import os
@@ -111,3 +111,28 @@ async def get_message_by_userid(id:int, db:Session=Depends(get_db)):
     if not message:
         raise HTTPException(status_code=404, detail='Email not found')
     return message
+
+manager = ConnectionManager()
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Depends(get_db)):
+    from auth.dependencies import get_current_user
+    # decode token and get user
+    try:
+        current_user = get_current_user(token=token, db=db)
+        user_id = current_user.id
+    except:
+        await websocket.close(code=1008)
+        return
+
+    await manager.connect(websocket, user_id)
+
+    try:
+        while True:
+            data = await websocket.receive_text()
+            # call Verdict AI for response
+            ai_response = await run_verdict_graph_async(data, db, user_id)
+            # send response back to same user
+            await manager.send_personal_message(ai_response, user_id)
+    except WebSocketDisconnect:
+        manager.disconnect(user_id)
