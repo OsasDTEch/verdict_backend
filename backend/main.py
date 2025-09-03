@@ -148,3 +148,8 @@ async def websocket_endpoint(websocket: WebSocket, token: str, db: Session = Dep
 
     except WebSocketDisconnect:
         manager.disconnect(user_id)
+
+
+@app.get("/ping")
+def ping():
+    return {"status": "ok"}
